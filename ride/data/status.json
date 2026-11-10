@@ -1,0 +1,19 @@
+{
+  "updated": "2026-11-10T12:00:00-05:00",
+  "updatedBy": "App maintainer",
+  "overall": { "state": "closed", "message": "Pre-season. Trails are closed until there is enough snow and the club opens them." },
+  "notices": [
+    "Stay on marked trails. Most of this network crosses private land by permission.",
+    "Observe quiet zones near homes.",
+    "The Pelham Border Riders' own postings and signs always win over this app."
+  ],
+  "zones": {
+    "town": { "state": "closed", "note": "" },
+    "peabody": { "state": "closed", "note": "" },
+    "kirby": { "state": "closed", "note": "" },
+    "gumpas": { "state": "closed", "note": "" },
+    "cutter": { "state": "closed", "note": "" },
+    "muldoon": { "state": "closed", "note": "" },
+    "littleisland": { "state": "closed", "note": "" }
+  }
+}

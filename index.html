@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pelham Border Riders Snowmobile Club | Pelham, NH</title>
+<meta name="description" content="Pelham Border Riders: America's most southeastern snowmobile club. Trail conditions, a live GPS trail map, parking, events and membership for Pelham, New Hampshire.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pelham Border Riders">
+<meta property="og:title" content="Pelham Border Riders Snowmobile Club">
+<meta property="og:description" content="Trail conditions, a live GPS trail map, events and membership for Pelham, NH snowmobilers.">
+<meta property="og:url" content="https://johnfudala-a11y.github.io/pelham-border-riders/">
+<meta property="og:image" content="https://johnfudala-a11y.github.io/pelham-border-riders/assets/photos/sleds-on-a-club-built-bridge.jpg">
+<meta property="og:image:width" content="960">
+<meta property="og:image:height" content="720">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b1622">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script>document.documentElement.classList.remove("no-js")</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SportsOrganization","name":"Pelham Border Riders Snowmobile Club","sport":"Snowmobiling",
+ "description":"Volunteer snowmobile club that builds and maintains the trail system in Pelham, New Hampshire.",
+ "address":{"@type":"PostalAddress","postOfficeBoxNumber":"644","addressLocality":"Pelham","addressRegion":"NH","postalCode":"03076","addressCountry":"US"},
+ "email":"pelhamborderriders@gmail.com","sameAs":["https://www.facebook.com/Pelham.Border.Riders"],
+ "memberOf":{"@type":"Organization","name":"New Hampshire Snowmobile Association","url":"https://www.nhsa.com/"}}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- icon set -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.800 7 11 7 11z"/><circle cx="12" cy="10" r="2.500"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></symbol>
+    <symbol id="i-park" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M10 16V8h3a2.500 2.500 0 0 1 0 5h-3"/></symbol>
+    <symbol id="i-status" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.500 13a7.500 7.500 0 0 1 15 0M8 13a4 4 0 0 1 8 0"/><circle cx="12" cy="16.500" r="1.500" fill="currentColor"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.500 1.500a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"><path d="M14 5h5v5M19 5l-8 8M11 7H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-5"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2.500 20h19L12 4zM12 10v5M12 17.500v.300"/></symbol>
+    <symbol id="i-quiet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h3l5 4V6L7 10H4zM16 9.500l5 5M21 9.500l-5 5"/></symbol>
+    <symbol id="i-gate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6v14M20 6v14M4 9h16M4 15h16M4 9l16 6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h12M11 7l5 5-5 5M20 5v14"/></symbol>
+    <symbol id="i-trail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20c0-5 12-5 12-10S9 7 9 4"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8h10v8M13 11h4l3 3v2h-2M9.500 16H13"/><circle cx="7" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></symbol>
+  </defs>
+</svg>
+
+<!-- NAV -->
+<nav class="nav" id="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Pelham Border Riders, home">
+      <img id="navLogo" alt="" width="36" height="50" hidden>
+      <span><b>Border Riders</b><small>Pelham, NH Snowmobile Club</small></span>
+    </a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="links"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <div class="links" id="links">
+      <a href="#conditions">Conditions</a>
+      <a href="map.html">Trail Map</a>
+      <a href="#about">The Club</a>
+      <a href="#events">Events</a>
+      <a href="#parking">Parking</a>
+      <a href="#photos">Photos</a>
+      <a href="#contact">Contact</a>
+      <a class="btn btn-blaze btn-sm" href="#join">Join the Club</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="stars"></div>
+  <canvas id="snow" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <a class="status-pill" href="#conditions"><span class="dot closed" id="heroDot"></span><span id="heroStatus">Trail status</span></a>
+    <h1>Ride the border.<span>Ride Pelham.</span></h1>
+    <p>America's most southeastern snowmobile club. We're the volunteers who build, groom and look after 60+ miles of trail through Pelham's forests, ponds, powerlines and pipeline.</p>
+    <div class="ctas">
+      <a class="btn btn-blaze" href="#join">Join and save $30 a sled</a>
+      <a class="btn btn-ghost" href="map.html">Open the trail map <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+  <svg class="scene" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 160 120 90l90 60 140-110 120 100 90-50 160 120 110-70 150 80 120-100 140 90 100-40v120H0Z" fill="#1d3a5a" opacity=".7"/>
+    <path d="M0 200l80-30 60 20 30-40 30 40 40-20 50 30 40-50 40 50 60-10 30-40 30 40 70 10 60-40 40 30 30-40 30 40 90 20 70-30 40-40 40 40 60 10 40-30 30 30 80-10 60 20v70H0Z" fill="#0f2238"/>
+    <g fill="#0a1522">
+      <path d="M90 260l22-70 22 70Z"/><path d="M130 260l16-50 16 50Z"/><path d="M300 260l26-90 26 90Z"/><path d="M340 260l18-60 18 60Z"/>
+      <path d="M620 260l24-80 24 80Z"/><path d="M660 260l15-46 15 46Z"/><path d="M980 260l26-92 26 92Z"/><path d="M1020 260l17-56 17 56Z"/>
+      <path d="M1250 260l24-84 24 84Z"/><path d="M1290 260l16-50 16 50Z"/><path d="M470 260l14-44 14 44Z"/><path d="M820 260l18-58 18 58Z"/>
+    </g>
+    <path d="M0 240q360-30 720 0t720 0v20H0Z" fill="#0b1622"/>
+  </svg>
+</header>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="wrap">
+    <div class="stat"><b>60+</b><span>Miles of trail</span></div>
+    <div class="stat"><b>7</b><span>Riding areas</span></div>
+    <div class="stat"><b>$30</b><span>Off each sled</span></div>
+    <div class="stat"><b>100%</b><span>Volunteer run</span></div>
+  </div>
+</div>
+
+<main id="main">
+<noscript><p style="padding:24px;text-align:center">This site needs JavaScript turned on to show trail conditions and events.</p></noscript>
+
+<!-- CONDITIONS -->
+<section id="conditions">
+  <div class="wrap">
+    <div class="cond-head reveal">
+      <div>
+        <span class="eyebrow">From the trail crew</span>
+        <h2>Trail Conditions</h2>
+        <p class="lead">The status of every riding area in town. Open the live map to see each trail, or grab a printable map for the area you're riding.</p>
+      </div>
+      <div class="ctas">
+        <a class="btn btn-dark" href="map.html"><svg aria-hidden="true"><use href="#i-map"/></svg> Live trail map</a>
+        <a class="btn btn-line" href="https://www.nhstateparks.org/things-to-do/snowmobiling" target="_blank" rel="noopener">Statewide conditions <svg aria-hidden="true"><use href="#i-ext"/></svg></a>
+      </div>
+    </div>
+    <div class="banner closed reveal" id="banner" role="status"></div>
+    <div class="areas" id="areas"></div>
+    <ul class="rules reveal" aria-label="Trail rules">
+      <li><svg aria-hidden="true"><use href="#i-trail"/></svg>Stay on marked trails</li>
+      <li><svg aria-hidden="true"><use href="#i-truck"/></svg>Watch for grooming equipment</li>
+      <li><svg aria-hidden="true"><use href="#i-right"/></svg>Drive with care, keep right</li>
+      <li><svg aria-hidden="true"><use href="#i-quiet"/></svg>Respect quiet zones</li>
+      <li><svg aria-hidden="true"><use href="#i-gate"/></svg>A closed gate means a closed trail</li>
+      <li><svg aria-hidden="true"><use href="#i-alert"/></svg>Use early-season caution</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="wrap">
+    <figure class="reveal">
+      <img id="crewPhoto" alt="Border Riders volunteers standing on a trail bridge they built" loading="lazy" width="1185" height="666">
+      <figcaption>The bridge crew</figcaption>
+    </figure>
+    <div class="reveal">
+      <span class="eyebrow">The club</span>
+      <h2>Neighbors who build the trails</h2>
+      <p class="lead">Every mile you ride in Pelham exists because a volunteer cleared it, signed it, bridged it or groomed it, and because a landowner said yes. The Border Riders are those volunteers.</p>
+      <blockquote>Dedicated to connecting our community to safe and healthy outdoor activities.</blockquote>
+      <ul class="projects" id="projects" aria-label="Recent trail projects"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- GPS APP -->
+<section class="gps on-dark" id="app">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">New this season</span>
+      <h2>The Border Riders GPS Trail App <span class="badge-soon" id="appBadge">Coming soon</span></h2>
+      <p class="lead">Every Pelham trail on your phone, built by a club member and free for every rider. See exactly where you are on the trail system, even deep in the woods.</p>
+      <ul class="features">
+        <li><span class="ico"><svg aria-hidden="true"><use href="#i-pin"/></svg></span><div><b>Live "you are here"</b><small>Your position on the real Pelham trail network.</small></div></li>
+        <li><span class="ico"><svg aria-hidden="true"><use href="#i-trail"/></svg></span><div><b>Every trail, named</b><small>Powerlines, pipeline, town forests and conservation land.</small></div></li>
+        <li><span class="ico"><svg aria-hidden="true"><use href="#i-park"/></svg></span><div><b>Parking and trailheads</b><small>One-tap directions to Veterans Park and the other lots.</small></div></li>
+        <li><span class="ico"><svg aria-hidden="true"><use href="#i-status"/></svg></span><div><b>Open or closed at a glance</b><small>The same status the trail crew posts here.</small></div></li>
+      </ul>
+      <div class="ctas">
+        <a class="btn btn-blaze" id="appBtn" href="map.html">Try the web map now</a>
+        <a class="btn btn-ghost" href="#join">Join the club</a>
+      </div>
+    </div>
+    <div class="phone reveal">
+      <a class="screen" href="map.html" aria-label="Open the live trail map">
+        <div id="miniMap"></div>
+        <div class="hud"><div><b id="hudMiles">31</b>miles mapped</div><div><b id="hudTrails">129</b>trail segments</div><div class="live"><b>GPS</b>ready</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="join" id="join">
+  <div class="wrap">
+    <div class="card feature reveal">
+      <span class="eyebrow"><span id="joinSeason"></span> season membership</span>
+      <h2>Join the Border Riders</h2>
+      <div class="price">$30 <small>off every sled</small></div>
+      <p class="lead" id="voucherText"></p>
+      <ul class="checks">
+        <li>Your registration voucher is emailed to you automatically</li>
+        <li>Your dues keep Pelham's trails open, signed and groomed</li>
+        <li>Volunteer on trail work and your membership is free</li>
+      </ul>
+      <a class="btn btn-dark" id="joinBtn" href="#" target="_blank" rel="noopener">Join online <svg aria-hidden="true"><use href="#i-ext"/></svg></a>
+      <p class="fineprint" id="priceNote"></p>
+    </div>
+    <div class="card reveal">
+      <span class="eyebrow">It takes two minutes</span>
+      <h3>How to join</h3>
+      <ol class="steps">
+        <li><b>Open the membership portal</b>Tap "Join online". It opens the state's club voucher form.</li>
+        <li><b>Enter your email and create a profile</b>Had a voucher before? Use the same email as last time.</li>
+        <li><b>Pay online</b>Secure checkout, one payment for the season.</li>
+        <li><b>Get your voucher by email</b>Use it when you register each sled to take $30 off.</li>
+      </ol>
+      <p class="help">Questions about joining? Call Fred at <a href="tel:+16034010425"><b>(603) 401-0425</b></a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="events" id="events">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Get involved</span>
+      <h2>Upcoming Events</h2>
+      <p class="lead">Club meetings are open to everyone. Come meet the crew, hear the trail report and help plan the season.</p>
+    </div>
+    <div class="event-list" id="eventList"></div>
+    <div class="volunteer reveal">
+      <div><h3>Trail work is under way. Volunteers needed.</h3><p>Clearing, signs, bridges and reroutes. Lend a hand for a morning and your membership is on us.</p></div>
+      <a class="btn btn-blaze" href="#contact">I can help</a>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery on-dark" id="photos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Through the years</span>
+      <h2>From the trails</h2>
+      <p class="lead">Work days, fresh grooming and the people who make it happen.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+<dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
+  <div class="lb"><img id="lbImg" alt=""><p id="lbCap"></p></div>
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous photo">&#8249;</button>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next photo">&#8250;</button>
+</dialog>
+
+<!-- PARKING -->
+<section id="parking">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Where to unload</span>
+      <h2>Parking and Trailheads</h2>
+      <p class="lead">Park only in these lots, keep entrances and gates clear, and carry out what you carry in. Landowners make these trails possible.</p>
+    </div>
+    <div class="park-grid" id="parkGrid"></div>
+  </div>
+</section>
+
+<!-- SHOP + SPONSORS -->
+<section class="support" id="shop">
+  <div class="wrap">
+    <div class="cond-head reveal">
+      <div>
+        <span class="eyebrow">Support the trails</span>
+        <h2>Club Gear and Raffle</h2>
+        <p class="lead">Tees, hoodies, beanies and NHSA Super Raffle tickets. Every purchase goes back into the trails.</p>
+      </div>
+      <a class="btn btn-dark" id="shopBtn" href="#" target="_blank" rel="noopener">Visit the shop <svg aria-hidden="true"><use href="#i-ext"/></svg></a>
+    </div>
+    <div class="shop-grid reveal" id="shopGrid"></div>
+
+    <div class="sponsor-head reveal" id="sponsors">
+      <span class="eyebrow">Thank you</span>
+      <h2>Our Sponsors</h2>
+      <p class="lead">The local businesses that keep the groomer running. Please support the people who support the trails.</p>
+    </div>
+    <ul class="sponsor-cloud reveal" id="sponsorCloud"></ul>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">Get in touch</span>
+      <h2>Club Officers</h2>
+      <div class="officers" id="officers"></div>
+      <p class="reach"><span>Mail: <span id="mailAddr"></span></span><span>Email: <a id="clubEmail" href="#"></a></span><span><a id="fbLink2" href="#" target="_blank" rel="noopener">Follow us on Facebook</a></span></p>
+    </div>
+    <aside class="meet reveal" aria-label="Monthly meetings">
+      <span class="eyebrow on-dark">Monthly meetings</span>
+      <h3 id="meetRule"></h3>
+      <p class="lead" id="meetPlace"></p>
+      <p class="next">Next meeting<b id="nextMeet"></b></p>
+      <a class="btn btn-blaze" id="meetMap" target="_blank" rel="noopener" href="#">Directions <svg aria-hidden="true"><use href="#i-ext"/></svg></a>
+    </aside>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">
+      <img id="footLogo" alt="Pelham Border Riders club patch" width="46" height="64" loading="lazy" hidden>
+      <div><b class="name">Pelham Border Riders</b>Snowmobile Club of Pelham, New Hampshire<br><span id="footMail"></span></div>
+    </div>
+    <div>
+      <h5>Ride</h5>
+      <ul>
+        <li><a href="map.html">Live trail map</a></li>
+        <li><a href="#conditions">Trail conditions</a></li>
+        <li><a href="#parking">Parking</a></li>
+        <li><a href="https://nhsa.evtrails.com/" target="_blank" rel="noopener">NH statewide trail map</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Links</h5>
+      <ul>
+        <li><a id="fbLink" href="#" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.nhsa.com/" target="_blank" rel="noopener">NH Snowmobile Association</a></li>
+        <li><a href="https://www.nhstateparks.org/things-to-do/snowmobiling" target="_blank" rel="noopener">NH Bureau of Trails</a></li>
+        <li><a href="https://www.wildlife.nh.gov/highway-recreational-vehicles-ohrv-and-snowmobiles" target="_blank" rel="noopener">NH Fish and Game</a></li>
+      </ul>
+    </div>
+    <div class="legal"><span>&copy; <span id="yr"></span> Pelham Border Riders Snowmobile Club</span><span>Website donated by a club member</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
+<script src="assets/site-config.js" defer></script>
+<script src="assets/main.js" defer></script>
+</body>
+</html>

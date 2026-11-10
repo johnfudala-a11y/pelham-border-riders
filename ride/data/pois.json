@@ -1,0 +1,18 @@
+{
+  "note": "Parking and hazard spots read off the Pelham Border Riders' 2022 town trail map picture, plus two locations the club links to directly. Positions from the picture are good to roughly 100 ft. Confirm before trailering.",
+  "pois": [
+    { "id": "p-veterans", "type": "parking", "name": "Veterans Memorial Park trailer drop", "detail": "11 Mammoth Rd, Pelham. Listed by the club as the trailer drop.", "lat": 42.702408, "lon": -71.358158, "src": "club" },
+    { "id": "p-costa", "type": "parking", "name": "Costa Conservation Area parking", "detail": "Off Frontier Drive.", "lat": 42.714555, "lon": -71.286238, "src": "map2022" },
+    { "id": "p-cutler", "type": "parking", "name": "Cutler-Spalding Conservation Area", "detail": "Location linked from the club's parking page.", "lat": 42.715517, "lon": -71.37072, "src": "club" },
+    { "id": "p-peabody", "type": "parking", "name": "Peabody Town Forest parking", "detail": "Near Old Lawrence Road.", "lat": 42.729854, "lon": -71.307492, "src": "map2022" },
+    { "id": "p-drummer", "type": "parking", "name": "Drummer Road parking", "detail": "East side, near the Calitri Conservation Area.", "lat": 42.731904, "lon": -71.264985, "src": "map2022" },
+    { "id": "p-baldwin", "type": "parking", "name": "Baldwin Hill Road parking", "detail": "Northwest trails.", "lat": 42.766587, "lon": -71.356226, "src": "map2022" },
+    { "id": "p-tiger", "type": "parking", "name": "Tiger Avenue parking", "detail": "South side of town.", "lat": 42.702724, "lon": -71.313289, "src": "map2022" },
+    { "id": "p-windham", "type": "parking", "name": "Windham Road parking", "detail": "Crossed out on the club's 2022 map. May no longer be usable.", "lat": 42.756972, "lon": -71.319085, "src": "map2022", "flag": "x2022" },
+    { "id": "p-hinds", "type": "parking", "name": "Hinds Lane parking", "detail": "Gumpas Pond area. Crossed out on the club's 2022 map. May no longer be usable.", "lat": 42.727488, "lon": -71.368892, "src": "map2022", "flag": "x2022" },
+    { "id": "p-gumpas-s", "type": "parking", "name": "Gumpas Pond south parking", "detail": "Crossed out on the club's 2022 map. May no longer be usable.", "lat": 42.718814, "lon": -71.374903, "src": "map2022", "flag": "x2022" },
+    { "id": "h-littleisland", "type": "hazard", "name": "Pond crossing: Little Island Pond", "detail": "The trail crosses the ice here. Never cross unless you know the ice is safe.", "lat": 42.725596, "lon": -71.287956, "src": "map2022" },
+    { "id": "h-east", "type": "hazard", "name": "Pond crossing", "detail": "Marked as a caution point on the club's map. Check ice before crossing.", "lat": 42.742153, "lon": -71.260476, "src": "map2022" },
+    { "id": "h-south", "type": "hazard", "name": "Pond crossing near the state line", "detail": "Marked as a caution point on the club's map. Check ice before crossing.", "lat": 42.695466, "lon": -71.339695, "src": "map2022" }
+  ]
+}

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Live Trail Map | Pelham Border Riders</title>
+<meta name="description" content="Interactive GPS trail map of the Pelham, NH snowmobile trail system, with parking and live location.">
+<meta name="theme-color" content="#0b1622">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{--night:#0b1622;--blaze:#ff6a13;--blaze-ink:#c84300;--glass:rgba(11,22,34,.93);--head:"Barlow Condensed","Arial Narrow",sans-serif}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:Inter,system-ui,sans-serif;background:var(--night);color:#fff;overflow:hidden}
+  button{font:inherit;color:inherit;cursor:pointer}
+  :focus-visible{outline:3px solid #2f7df6;outline-offset:2px}
+  svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  #map{position:absolute;inset:0;background:#dfe7ee}
+  .bar{position:absolute;z-index:1000;top:calc(10px + env(safe-area-inset-top));left:calc(10px + env(safe-area-inset-left));right:calc(10px + env(safe-area-inset-right));display:flex;gap:8px;align-items:stretch;pointer-events:none}
+  .bar>*{pointer-events:auto}
+  .pill{background:var(--glass);backdrop-filter:blur(10px);color:#fff;border:0;border-radius:14px;padding:0 14px;min-height:48px;display:flex;align-items:center;gap:10px;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.28);font-weight:700;font-size:.88rem}
+  .pill.sq{width:48px;justify-content:center;padding:0}
+  .pill b{font-family:var(--head);font-size:1.3rem;text-transform:uppercase;letter-spacing:.02em;line-height:1}
+  .pill small{display:block;font-size:.72rem;font-weight:600;color:#b9c8d8;margin-top:2px}
+  .dot{width:10px;height:10px;border-radius:50%;flex:none}
+  .grow{flex:1;min-width:0}
+  .notice{position:absolute;z-index:999;top:calc(68px + env(safe-area-inset-top));left:10px;right:10px;margin:auto;max-width:560px;background:#fff7ed;color:#7c2d12;border:1px solid #fdba74;border-radius:12px;padding:10px 12px 10px 14px;font-size:.82rem;line-height:1.4;display:flex;gap:10px;align-items:flex-start;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+  .notice button{background:none;border:0;font-size:1.3rem;line-height:1;padding:2px 6px;color:#7c2d12;border-radius:6px}
+  .fab{position:absolute;z-index:1000;right:calc(12px + env(safe-area-inset-right));bottom:calc(var(--sheet-h,170px) + 24px + env(safe-area-inset-bottom));display:grid;gap:10px}
+  .fab button{width:52px;height:52px;border-radius:16px;border:0;background:#fff;color:var(--night);box-shadow:0 6px 20px rgba(0,0,0,.28);display:grid;place-items:center}
+  .fab button.on{background:var(--blaze-ink);color:#fff}
+  .sheet{position:absolute;z-index:1000;left:calc(10px + env(safe-area-inset-left));right:calc(10px + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));background:var(--glass);backdrop-filter:blur(12px);border-radius:20px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.38);max-width:540px}
+  .row{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:12px}
+  .row small{display:block;color:#9fb1c4;font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;font-weight:800}
+  .row b{font-family:var(--head);font-size:1.55rem;line-height:1.15;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);font-size:.75rem;color:#d2dde8}
+  .legend i{display:inline-block;width:20px;height:0;border-top:4px solid;border-radius:2px;vertical-align:middle;margin-right:6px}
+  .legend i.dash{border-top-style:dashed;border-top-width:3px}
+  .legend .pk{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:5px;background:#2563eb;color:#fff;font:800 .62rem/1 Inter;margin-right:6px;vertical-align:middle}
+  .msg{font-size:.8rem;color:#ffc9a8;margin-top:8px}
+  .msg:empty{display:none}
+  /* trail list drawer */
+  .drawer{position:absolute;z-index:1100;top:0;bottom:0;right:0;width:min(360px,88vw);background:var(--night);box-shadow:-10px 0 40px rgba(0,0,0,.4);transform:translateX(105%);transition:transform .28s;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+  .drawer.open{transform:none}
+  .drawer header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px}
+  .drawer h2{margin:0;font:800 1.7rem/1 var(--head);text-transform:uppercase}
+  .drawer header button{background:rgba(255,255,255,.1);border:0;width:44px;height:44px;border-radius:12px;font-size:1.4rem}
+  .drawer input{margin:0 16px 10px;padding:12px 14px;border-radius:12px;border:1px solid #2a3b50;background:#12233a;color:#fff;font:inherit}
+  .drawer ul{list-style:none;margin:0;padding:0 8px 20px;overflow:auto;flex:1}
+  .drawer li button{width:100%;text-align:left;background:none;border:0;border-radius:12px;padding:11px 10px;display:flex;align-items:center;gap:12px}
+  .drawer li button:hover{background:rgba(255,255,255,.07)}
+  .drawer li i{width:6px;height:30px;border-radius:3px;flex:none}
+  .drawer li span{flex:1;font-weight:600;font-size:.93rem}
+  .drawer li em{font-style:normal;color:#9fb1c4;font-size:.82rem;white-space:nowrap}
+  .scrim{position:absolute;inset:0;z-index:1050;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .28s}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .leaflet-popup-content-wrapper{border-radius:14px}
+  .leaflet-popup-content{font-family:Inter,sans-serif;font-size:.86rem;line-height:1.45;margin:14px 16px;color:#122033}
+  .leaflet-popup-content b{font-size:1rem;display:block;margin-bottom:2px}
+  .leaflet-popup-content a{color:var(--blaze-ink);font-weight:700}
+  .leaflet-popup-content .k{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#52647a}
+  .me{width:20px;height:20px;border-radius:50%;background:#2563eb;border:3px solid #fff;box-shadow:0 0 0 6px rgba(37,99,235,.25)}
+  .pk-m{width:30px;height:30px;border-radius:10px 10px 10px 2px;background:#2563eb;color:#fff;border:2px solid #fff;display:grid;place-items:center;font:800 15px/1 Inter;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+  .mt-m{width:26px;height:26px;border-radius:50%;background:var(--night);color:#fff;border:2px solid #fff;display:grid;place-items:center;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+  .mt-m svg{width:14px;height:14px}
+  .leaflet-control-scale{margin-bottom:calc(var(--sheet-h,170px) + 22px + env(safe-area-inset-bottom))!important;margin-left:14px!important}
+  @media (min-width:900px){.sheet{left:16px;bottom:16px}.notice{top:76px}}
+</style>
+</head>
+<body>
+<div id="map" role="application" aria-label="Pelham snowmobile trail map"></div>
+
+<div class="bar">
+  <a class="pill sq" href="index.html" aria-label="Back to the club website"><svg class="i" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></a>
+  <a class="pill grow" href="index.html#conditions"><span class="dot" id="dot"></span><span><b>Pelham Trails</b><small id="st"></small></span></a>
+  <button class="pill" id="listBtn" aria-controls="drawer" aria-expanded="false"><svg class="i" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span>Trails</span></button>
+</div>
+
+<div class="notice" id="notice" hidden>
+  <span><b>Preview map.</b> Trail lines are still being checked against the club's official map. Dashed grey sections are crossed out on the club's 2022 map. Obey signs and gates on the ground.</span>
+  <button id="noticeX" aria-label="Dismiss">&times;</button>
+</div>
+
+<div class="fab">
+  <button id="locate" aria-label="Show my location" aria-pressed="false"><svg class="i" aria-hidden="true"><circle cx="12" cy="12" r="3.500"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+  <button id="fit" aria-label="Show all trails"><svg class="i" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button id="layers" aria-label="Satellite view" aria-pressed="false"><svg class="i" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg></button>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="row" aria-live="polite">
+    <div><small>Nearest trail</small><b id="near">Tap locate</b></div>
+    <div><small>Distance</small><b id="dist">&ndash;</b></div>
+    <div><small>Speed</small><b id="spd">&ndash;</b></div>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="msg" id="msg" role="alert"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Trail list" inert>
+  <header><h2>Trails</h2><button id="drawerX" aria-label="Close trail list">&times;</button></header>
+  <input id="q" type="search" placeholder="Search trails" aria-label="Search trails">
+  <ul id="list"></ul>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="assets/site-config.js"></script>
+<script>
+(function(){
+  "use strict";
+  const C = window.PBR, KINDS = window.PBR_KINDS, kindOf = window.PBR_TRAIL_KIND, styleOf = window.PBR_TRAIL_STYLE;
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const LABEL = {open:"Open",limited:"Limited",closed:"Closed"}, COL = {open:"#22c55e",limited:"#f5b301",closed:"#f87171"};
+  const miles = km => km * 0.621371;
+  const dir = q => "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(q);
+
+  $("dot").style.background = COL[C.status.overall];
+  $("st").textContent = "Trails " + LABEL[C.status.overall].toLowerCase();
+
+  /* notice (remembered for this visit only) */
+  let seen = false; try { seen = sessionStorage.getItem("pbr-notice") === "1"; } catch (e) {}
+  $("notice").hidden = seen;
+  $("noticeX").onclick = () => { $("notice").hidden = true; try { sessionStorage.setItem("pbr-notice", "1"); } catch (e) {} };
+
+  /* map */
+  const map = L.map("map", { zoomControl:false, zoomSnap:0.5 }).setView([42.727,-71.325], 13);
+  map.attributionControl.setPrefix(false);
+  const street = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
+  const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom:19, attribution:"Imagery &copy; Esri" });
+  L.control.scale({ metric:false, position:"bottomleft" }).addTo(map);
+  L.Popup.mergeOptions({ autoPanPaddingTopLeft:[12,170], autoPanPaddingBottomRight:[70,200], maxWidth:270 });
+  let satOn = false;
+  $("layers").onclick = e => { satOn = !satOn; map.removeLayer(satOn ? street : sat); (satOn ? sat : street).addTo(map).bringToBack(); e.currentTarget.classList.toggle("on", satOn); e.currentTarget.setAttribute("aria-pressed", satOn); };
+  const sheetH = () => document.documentElement.style.setProperty("--sheet-h", $("sheet").offsetHeight + "px");
+  const padFit = () => ({ paddingTopLeft:[24,84], paddingBottomRight:[24, $("sheet").offsetHeight + 30] });
+
+  /* parking + meeting place */
+  const pMarkers = C.parking.map(p => !p.lat ? null :
+    L.marker([p.lat,p.lng], { title:p.name, icon:L.divIcon({ html:'<div class="pk-m">P</div>', className:"", iconSize:[30,30], iconAnchor:[4,28], popupAnchor:[11,-26] }) }).addTo(map)
+      .bindPopup(`<span class="k">${esc(p.tag || "Parking")}</span><b>${esc(p.name)}</b>${esc(p.address)}<br>${esc(p.note || "")}${p.approx ? "<br><i>Pin is approximate.</i>" : ""}<br><a target="_blank" rel="noopener" href="${dir(p.directions || p.lat + "," + p.lng)}">Directions</a>`));
+  if (C.meeting.lat) L.marker([C.meeting.lat, C.meeting.lng], { title:C.meeting.place, icon:L.divIcon({ html:'<div class="mt-m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.500" stroke-linecap="round"><path d="M5 21V4M5 5h13l-3 4 3 4H5"/></svg></div>', className:"", iconSize:[26,26], iconAnchor:[13,13], popupAnchor:[0,-12] }) }).addTo(map)
+    .bindPopup(`<span class="k">Club meetings</span><b>${esc(C.meeting.place)}</b>${esc(C.meeting.address)}<br>${esc(C.meeting.rule)}, ${esc(C.meeting.time)}<br><a target="_blank" rel="noopener" href="${dir(C.meeting.address)}">Directions</a>`);
+
+  /* trails */
+  let trails = [], bounds, hi = null; const groups = new Map();
+  fetch("data/trails.geojson").then(r => r.json()).then(g => {
+    const layer = L.geoJSON(g, {
+      style: f => styleOf(f, 4),
+      onEachFeature: (f, l) => {
+        const p = f.properties, k = kindOf(f); trails.push(f); f._k = k;
+        l.bindPopup(`<span class="k">${esc(KINDS[k].label)}</span><b>${esc(p.name || "Unnamed trail")}</b>${p.km ? miles(p.km).toFixed(2) + " miles" : ""}${p.acc === "approx" ? " · line is approximate" : ""}${k === "unconfirmed" ? "<br><i>Crossed out on the club's 2022 map. Treat as closed unless the club says otherwise.</i>" : ""}`);
+        l.on("mouseover", () => l.setStyle({ weight:7 })); l.on("mouseout", () => l.setStyle({ weight: hi && hi.includes(l) ? 8 : 4 }));
+        if (p.name) { const key = p.name.trim(); if (!groups.has(key)) groups.set(key, { name:key, km:0, layers:[], k }); const G = groups.get(key); G.km += p.km || 0; G.layers.push(l); }
+      }
+    }).addTo(map);
+    bounds = layer.getBounds(); sheetH();
+    const m = /^#p=(\d+)$/.exec(location.hash), pm = m && pMarkers[+m[1]];
+    if (pm) { map.setView(pm.getLatLng(), 15); pm.openPopup(); } else map.fitBounds(bounds, padFit());
+    const used = [...new Set(trails.map(f => f._k))];
+    $("legend").innerHTML = Object.keys(KINDS).filter(k => used.includes(k)).map(k => `<span><i class="${KINDS[k].dash ? "dash" : ""}" style="border-color:${KINDS[k].color}"></i>${esc(KINDS[k].label)}</span>`).join("") + '<span><span class="pk">P</span>Parking</span>';
+    sheetH(); renderList("");
+  }).catch(() => say("The trail data could not be loaded. Check your connection and reload."));
+  $("fit").onclick = () => bounds && map.fitBounds(bounds, padFit());
+  addEventListener("hashchange", () => { const m = /^#p=(\d+)$/.exec(location.hash), pm = m && pMarkers[+m[1]]; if (pm) { map.setView(pm.getLatLng(), 15); pm.openPopup(); } });
+  addEventListener("resize", sheetH);
+
+  /* trail list drawer */
+  const drawer = $("drawer"), scrim = $("scrim"), listBtn = $("listBtn");
+  const setDrawer = o => { drawer.classList.toggle("open", o); scrim.classList.toggle("open", o); drawer.inert = !o; listBtn.setAttribute("aria-expanded", o); if (o) $("q").focus({ preventScroll:true }); else listBtn.focus({ preventScroll:true }); };
+  listBtn.onclick = () => setDrawer(true); $("drawerX").onclick = scrim.onclick = () => setDrawer(false);
+  addEventListener("keydown", e => e.key === "Escape" && drawer.classList.contains("open") && setDrawer(false));
+  function renderList(q) {
+    const items = [...groups.values()].filter(G => G.name.toLowerCase().includes(q.toLowerCase())).sort((a,b) => a.name.localeCompare(b.name));
+    $("list").innerHTML = items.length ? items.map(G => `<li><button data-n="${esc(G.name)}"><i style="background:${KINDS[G.k].color}"></i><span>${esc(G.name)}</span><em>${miles(G.km).toFixed(1)} mi</em></button></li>`).join("") : '<li style="padding:14px;color:#9fb1c4">No trails match.</li>';
+  }
+  $("q").oninput = e => renderList(e.target.value);
+  $("list").onclick = e => { const b = e.target.closest("button"); if (!b) return; const G = groups.get(b.dataset.n); if (!G) return;
+    if (hi) hi.forEach(l => l.setStyle({ weight:4 })); hi = G.layers; hi.forEach(l => l.setStyle({ weight:8 }).bringToFront());
+    setDrawer(false); follow = false; map.fitBounds(L.featureGroup(G.layers).getBounds(), { ...padFit(), maxZoom:16 }); G.layers[0].openPopup(); };
+
+  /* nearest trail (flat-earth approximation, fine at town scale) */
+  function nearest(lat, lng) {
+    const kx = Math.cos(lat*Math.PI/180)*111320, ky = 110540; let best = { d:Infinity };
+    for (const f of trails) {
+      const lines = f.geometry.type === "LineString" ? [f.geometry.coordinates] : f.geometry.coordinates;
+      for (const ln of lines) for (let i=1;i<ln.length;i++){
+        const ax=(ln[i-1][0]-lng)*kx, ay=(ln[i-1][1]-lat)*ky, bx=(ln[i][0]-lng)*kx, by=(ln[i][1]-lat)*ky;
+        const dx=bx-ax, dy=by-ay, t=Math.max(0,Math.min(1,-(ax*dx+ay*dy)/((dx*dx+dy*dy)||1)));
+        const d=Math.hypot(ax+t*dx, ay+t*dy); if (d<best.d) best={ d, name:f.properties.name };
+      }
+    }
+    return best;
+  }
+
+  /* live GPS */
+  let watch=null, me=null, acc=null, follow=true, lock=null;
+  const btn = $("locate");
+  function say(t){ $("msg").textContent = t; sheetH(); }
+  const keepAwake = async () => { try { if ("wakeLock" in navigator) lock = await navigator.wakeLock.request("screen"); } catch (e) {} };
+  document.addEventListener("visibilitychange", () => { if (watch !== null && document.visibilityState === "visible") keepAwake(); });
+  map.on("dragstart", () => follow = false);
+  btn.onclick = () => {
+    if (watch !== null) { follow = true; if (me) map.setView(me.getLatLng(), Math.max(map.getZoom(), 16)); return; }
+    if (!navigator.geolocation) return say("GPS is not available on this device.");
+    btn.classList.add("on"); btn.setAttribute("aria-pressed", "true"); $("near").textContent = "Locating…"; say(""); keepAwake();
+    watch = navigator.geolocation.watchPosition(pos => {
+      const { latitude:la, longitude:lo, accuracy, speed } = pos.coords, ll=[la,lo];
+      if (!me) { me = L.marker(ll, { icon:L.divIcon({ html:'<div class="me"></div>', className:"", iconSize:[20,20], iconAnchor:[10,10] }), zIndexOffset:1000, interactive:false }).addTo(map);
+                 acc = L.circle(ll, { radius:accuracy, color:"#2563eb", weight:1, fillOpacity:.1, interactive:false }).addTo(map); map.setView(ll, 16); }
+      else { me.setLatLng(ll); acc.setLatLng(ll).setRadius(accuracy); if (follow) map.panTo(ll); }
+      if (!trails.length) return;
+      const n = nearest(la, lo), mi = n.d/1609.34, on = n.d < Math.max(30, accuracy);
+      $("near").textContent = n.name || (on ? "On a trail" : "Unnamed trail");
+      $("dist").textContent = on ? "On trail" : (mi < .1 ? Math.round(n.d*3.281)+" ft" : mi.toFixed(1)+" mi");
+      $("spd").textContent = speed != null && speed >= 0 ? Math.round(speed*2.237)+" mph" : "–";
+      say(mi > 15 ? "You're a long way from Pelham. Tap the frame button to see the trails." : "");
+    }, err => { navigator.geolocation.clearWatch(watch); watch = null; btn.classList.remove("on"); btn.setAttribute("aria-pressed", "false"); $("near").textContent = "Tap locate"; if (lock) { lock.release(); lock = null; }
+      say(err.code === 1 ? "Location is blocked. Allow location for this site in your browser settings, then tap locate again." : "Couldn't get a GPS fix. Move to open sky and try again."); },
+    { enableHighAccuracy:true, maximumAge:2000, timeout:20000 });
+  };
+})();
+</script>
+</body>
+</html>
