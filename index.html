@@ -15,12 +15,15 @@
 <meta property="og:image:height" content="720">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b1622">
+<!-- Preview copy: keeps search engines from listing this address. Remove this line when the site moves to the club's domain. -->
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-title" content="Border Riders">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="assets/style.css">
 <script>document.documentElement.classList.remove("no-js")</script>
 <script type="application/ld+json">
@@ -67,6 +70,7 @@
     <div class="links" id="links">
       <a href="#conditions">Conditions</a>
       <a href="map.html">Trail Map</a>
+      <a href="#app">GPS App</a>
       <a href="#about">The Club</a>
       <a href="#events">Events</a>
       <a href="#parking">Parking</a>
@@ -178,7 +182,7 @@
       </div>
     </div>
     <div class="phone reveal">
-      <a class="screen" href="map.html" aria-label="Open the live trail map">
+      <a class="screen" id="phoneLink" href="map.html" aria-label="Open the live trail map">
         <div id="miniMap"></div>
         <div class="hud"><div><b id="hudMiles">31</b>miles mapped</div><div><b id="hudTrails">129</b>trail segments</div><div class="live"><b>GPS</b>ready</div></div>
       </a>
@@ -314,6 +318,7 @@
       <h5>Ride</h5>
       <ul>
         <li><a href="map.html">Live trail map</a></li>
+        <li><a id="footApp" href="#app">GPS trail app</a></li>
         <li><a href="#conditions">Trail conditions</a></li>
         <li><a href="#parking">Parking</a></li>
         <li><a href="https://nhsa.evtrails.com/" target="_blank" rel="noopener">NH statewide trail map</a></li>
@@ -332,7 +337,6 @@
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
 <script src="assets/site-config.js" defer></script>
 <script src="assets/main.js" defer></script>
 </body>

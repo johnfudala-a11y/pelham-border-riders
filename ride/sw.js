@@ -1,5 +1,5 @@
 /* Service worker: keeps the app, trail data and viewed map tiles available with no signal. */
-const VERSION = 'pst-shell-v4';          // bump this when app files change
+const VERSION = 'pst-shell-v5';          // bump this when app files change
 const TILE_CACHE = 'pst-tiles-v1';       // must match CFG.tileCache in app.js
 const TILE_HOST = 'basemap.nationalmap.gov';
 const SHELL = [
@@ -36,6 +36,16 @@ self.addEventListener('fetch', e => {
     return;
   }
   if (url.origin !== self.location.origin) return;
+
+  // website integration: the club's status lives in the website's config file, one folder up.
+  // Always try the network so closures show up, fall back to the saved copy with no signal.
+  if (url.pathname.endsWith('/assets/site-config.js')) {
+    e.respondWith(fetch(req).then(res => {
+      if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put('site-config.js', copy)); }
+      return res;
+    }).catch(() => caches.match('site-config.js').then(hit => hit || Response.error())));
+    return;
+  }
 
   // trail status: always try the network so closures show up, fall back to the saved copy
   const live = ['status.json', 'worksites.json'].find(f => url.pathname.endsWith('/data/' + f));

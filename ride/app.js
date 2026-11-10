@@ -158,8 +158,23 @@ function renderStatusBar() {
   }
   $('statusAge').textContent = age;
 }
+// website integration: when the app sits inside the club website (in its ride/ folder), the status the
+// officers post in the website's assets/site-config.js is used, so there is one place to update.
+// Anywhere else that file is missing and the app falls back to its own data/status.json.
+function siteStatus() {
+  const P = window.PBR; if (!P || !P.status) return null;
+  const to = { open: 'open', limited: 'caution', closed: 'closed' }, zones = {};
+  (P.areas || []).forEach(a => { if (a.zone) zones[a.zone] = { state: to[a.status] || 'unknown', note: '' }; });
+  return { updated: P.status.updated + 'T12:00:00', overall: { state: to[P.status.overall] || 'unknown', message: P.status.note || '' }, zones,
+    notices: ['Stay on marked trails. Most of this network crosses private land by permission.', 'Observe quiet zones near homes.', 'Signs and gates on the trail always win over this app.'] };
+}
+function loadSiteStatus() {
+  return new Promise((ok, no) => { const s = document.createElement('script'); s.src = '../assets/site-config.js?t=' + Date.now();
+    s.onload = () => { s.remove(); const st = siteStatus(); st ? ok(st) : no(new Error('no status')); }; s.onerror = () => { s.remove(); no(new Error('no site config')); };
+    document.head.appendChild(s); });
+}
 function loadStatus() {
-  return getJSON('data/status.json', { cache: 'no-store' }).then(s => { status = s; store.set('status', s); })
+  return loadSiteStatus().catch(() => getJSON('data/status.json', { cache: 'no-store' })).then(s => { status = s; store.set('status', s); })
     .catch(() => { status = store.get('status', null); })
     .then(() => { renderStatusBar(); if (trails) drawTrails(); });
 }
@@ -377,7 +392,7 @@ function openStatus() {
     <h3>By area</h3>${zones}
     ${(s.notices || []).length ? '<h3>Notices</h3><div class="card"><ul>' + s.notices.map(n => `<li>${esc(n)}</li>`).join('') + '</ul></div>' : ''}
     <p class="muted">This app is unofficial. Status here is entered by the app's maintainer and can lag. Signs on the trail and the
-      <a href="https://www.borderridersofpelham.com/trail-conditions-and-maps" target="_blank" rel="noopener">Pelham Border Riders' trail conditions page</a> always win.</p>
+      <a href="../#conditions">Pelham Border Riders' trail conditions page</a> always win.</p>
     <button class="big" id="sRefresh">Check for a newer status</button>`);
   document.querySelectorAll('[data-zone]').forEach(b => b.onclick = () => {
     const pts = []; for (const f of trails.features) if (f.properties.zone === b.dataset.zone) for (const c of f.geometry.coordinates) pts.push([c[1], c[0]]);
@@ -601,7 +616,7 @@ function openAbout() {
       Solid lines follow a mapped path and are usually within 30 ft. Dashed lines are approximate and can be 100 ft or more off. Trails may have been rerouted or closed since 2022, and trails into neighbouring towns are not yet included.</p>
       <p>Your blue dot comes from your phone's GPS and is typically good to 15–30 ft in the open, worse under heavy tree cover.</p></div>
     <h3>Support the people who make the trails</h3>
-    <a class="big" href="https://www.borderridersofpelham.com/" target="_blank" rel="noopener"><span class="grow">Pelham Border Riders<small>Join the club, see official conditions</small></span><span>↗</span></a>
+    <a class="big" href="../"><span class="grow">Pelham Border Riders<small>Join the club, see official conditions</small></span><span>↗</span></a>
     <a class="big" href="https://slednh.evtrails.com/" target="_blank" rel="noopener"><span class="grow">SledNH statewide trail map<small>The NH Snowmobile Association's official map</small></span><span>↗</span></a>
     <h3>Data sources</h3>
     <p class="muted">Trail geometry © OpenStreetMap contributors, available under the Open Database License. Base maps and imagery: U.S. Geological Survey, The National Map.

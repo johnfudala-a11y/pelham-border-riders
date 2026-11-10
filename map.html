@@ -6,7 +6,11 @@
 <title>Live Trail Map | Pelham Border Riders</title>
 <meta name="description" content="Interactive GPS trail map of the Pelham, NH snowmobile trail system, with parking and live location.">
 <meta name="theme-color" content="#0b1622">
+<!-- Preview copy: remove the next line when the site moves to the club's domain. -->
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-title" content="Pelham Trails">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,6 +60,8 @@
   .drawer li i{width:6px;height:30px;border-radius:3px;flex:none}
   .drawer li span{flex:1;font-weight:600;font-size:.93rem}
   .drawer li em{font-style:normal;color:#9fb1c4;font-size:.82rem;white-space:nowrap}
+  .applink{margin:0 12px calc(14px + env(safe-area-inset-bottom));padding:13px 16px;border-radius:14px;background:var(--blaze-ink);color:#fff;text-decoration:none;font-weight:700;font-size:.95rem;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .applink small{display:block;font-weight:600;font-size:.76rem;color:#ffe1cf;margin-top:2px}
   .scrim{position:absolute;inset:0;z-index:1050;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .28s}
   .scrim.open{opacity:1;pointer-events:auto}
   .leaflet-popup-content-wrapper{border-radius:14px}
@@ -67,7 +73,9 @@
   .pk-m{width:30px;height:30px;border-radius:10px 10px 10px 2px;background:#2563eb;color:#fff;border:2px solid #fff;display:grid;place-items:center;font:800 15px/1 Inter;box-shadow:0 3px 8px rgba(0,0,0,.35)}
   .mt-m{width:26px;height:26px;border-radius:50%;background:var(--night);color:#fff;border:2px solid #fff;display:grid;place-items:center;box-shadow:0 3px 8px rgba(0,0,0,.35)}
   .mt-m svg{width:14px;height:14px}
-  .leaflet-control-scale{margin-bottom:calc(var(--sheet-h,170px) + 22px + env(safe-area-inset-bottom))!important;margin-left:14px!important}
+  .leaflet-bottom{bottom:calc(var(--sheet-h,170px) + 16px + env(safe-area-inset-bottom))}
+  .leaflet-bottom.leaflet-left .leaflet-control{margin-left:14px}
+  .leaflet-control-attribution{border-radius:6px;font-size:10px;margin-bottom:6px!important}
   @media (min-width:900px){.sheet{left:16px;bottom:16px}.notice{top:76px}}
 </style>
 </head>
@@ -106,6 +114,7 @@
   <header><h2>Trails</h2><button id="drawerX" aria-label="Close trail list">&times;</button></header>
   <input id="q" type="search" placeholder="Search trails" aria-label="Search trails">
   <ul id="list"></ul>
+  <a class="applink" id="appLink" href="ride/" hidden><span>Open the GPS app<small>Offline maps, ride recording, share your spot</small></span><svg class="i" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 </aside>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -129,8 +138,10 @@
   $("noticeX").onclick = () => { $("notice").hidden = true; try { sessionStorage.setItem("pbr-notice", "1"); } catch (e) {} };
 
   /* map */
-  const map = L.map("map", { zoomControl:false, zoomSnap:0.5 }).setView([42.727,-71.325], 13);
-  map.attributionControl.setPrefix(false);
+  /* canvas drawing with a wide tap margin, so a gloved thumb can still hit a trail line */
+  const map = L.map("map", { zoomControl:false, zoomSnap:0.5, renderer:L.canvas({ tolerance:14, padding:0.3 }) }).setView([42.727,-71.325], 13);
+  if (C.gpsApp && C.gpsApp.ready) { $("appLink").href = C.gpsApp.url; $("appLink").hidden = false; }
+  map.attributionControl.setPrefix(false); map.attributionControl.setPosition("bottomleft");
   const street = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
   const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom:19, attribution:"Imagery &copy; Esri" });
   L.control.scale({ metric:false, position:"bottomleft" }).addTo(map);
@@ -150,6 +161,8 @@
   /* trails */
   let trails = [], bounds, hi = null; const groups = new Map();
   fetch("data/trails.geojson").then(r => r.json()).then(g => {
+    /* white edge under each open trail keeps the lines readable on the satellite view */
+    L.geoJSON(g, { filter: f => kindOf(f) !== "unconfirmed", style: { color:"#fff", weight:7.5, opacity:.9, lineCap:"round" }, interactive:false }).addTo(map);
     const layer = L.geoJSON(g, {
       style: f => styleOf(f, 4),
       onEachFeature: (f, l) => {

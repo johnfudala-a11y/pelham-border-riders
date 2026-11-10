@@ -58,6 +58,7 @@
   if (C.gpsApp.ready) {
     const bd = $("#appBadge"); bd.textContent = "Live now"; bd.classList.add("live");
     const btn = $("#appBtn"); btn.href = C.gpsApp.url; btn.textContent = "Launch the GPS app";
+    $("#footApp").href = C.gpsApp.url; const pl = $("#phoneLink"); pl.href = C.gpsApp.url; pl.setAttribute("aria-label", "Launch the GPS trail app");
   }
 
   /* ---- events: automatic 3rd-Wednesday meetings + events from the config ---- */
@@ -105,6 +106,10 @@
     $("#lbClose").onclick = () => lb.close(); $("#lbPrev").onclick = () => show(cur - 1); $("#lbNext").onclick = () => show(cur + 1);
     lb.addEventListener("click", (e) => { if (e.target === lb || e.target.classList.contains("lb")) lb.close(); });
     lb.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") show(cur - 1); if (e.key === "ArrowRight") show(cur + 1); });
+    let sx = null;                         // swipe left or right on a phone
+    lb.addEventListener("touchstart", (e) => { sx = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+    lb.addEventListener("touchend", (e) => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1)); }, { passive: true });
+    lbImg.addEventListener("load", () => { new Image().src = P[(cur + 1) % P.length].img; });   // the next photo is ready before you ask
   }
 
   /* ---- parking ---- */
@@ -134,8 +139,13 @@
 
   /* ---- mini map in the phone mockup (starts when scrolled into view) ---- */
   const mini = $("#miniMap");
+  /* Leaflet is fetched only when the map is about to scroll into view */
+  const LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.";
+  const leaflet = () => window.L ? Promise.resolve() : Promise.all([
+    new Promise((ok, no) => { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = LEAFLET + "css"; l.onload = ok; l.onerror = no; document.head.prepend(l); }),
+    new Promise((ok, no) => { const s = document.createElement("script"); s.src = LEAFLET + "js"; s.onload = ok; s.onerror = no; document.head.appendChild(s); })]);
   function startMini() {
-    if (!window.L || mini.dataset.on) return; mini.dataset.on = 1;
+    if (mini.dataset.on) return; mini.dataset.on = 1;
     const m = L.map(mini, { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, touchZoom: false, boxZoom: false, keyboard: false, zoomSnap: 0.1 });
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(m);
     L.control.attribution({ prefix: false, position: "bottomright" }).addAttribution("&copy; OpenStreetMap").addTo(m);
@@ -149,7 +159,16 @@
       if (vp && vp.lat) L.circleMarker([vp.lat, vp.lng], { radius: 7, color: "#fff", weight: 3, fillColor: "#2563eb", fillOpacity: 1, interactive: false }).addTo(m);
     }).catch(() => {});
   }
-  if (mini) new IntersectionObserver((es, o) => es.some((e) => e.isIntersecting) && (startMini(), o.disconnect()), { rootMargin: "300px" }).observe(mini);
+  if (mini) new IntersectionObserver((es, o) => es.some((e) => e.isIntersecting) && (leaflet().then(startMini).catch(() => {}), o.disconnect()), { rootMargin: "600px" }).observe(mini);
+
+  /* ---- highlight the section you are reading in the menu ---- */
+  const spy = new Map([...links.querySelectorAll('a[href^="#"]:not(.btn)')].map((a) => [a.getAttribute("href").slice(1), a]));
+  const spyIO = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    spy.forEach((a) => a.removeAttribute("aria-current"));
+    const a = spy.get(e.target.id); if (a) a.setAttribute("aria-current", "true");
+  }), { rootMargin: "-45% 0px -50% 0px" });
+  document.querySelectorAll("main section[id], header[id]").forEach((el) => spyIO.observe(el));
 
   /* ---- reveal on scroll ---- */
   const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add("in"), io.unobserve(e.target))), { threshold: 0.1 });

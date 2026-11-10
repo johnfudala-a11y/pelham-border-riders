@@ -10,19 +10,26 @@ A fast, mobile-first static site. No Wix and no monthly fees. Hosting is free on
 | `assets/site-config.js` | **The only file officers need to edit.** Status, events, officers, parking, photos, shop, sponsors |
 | `assets/style.css`, `assets/main.js` | Design and behavior |
 | `data/trails.geojson` | Trail lines (shared with the Border Riders GPS app) |
-| `site.webmanifest`, `assets/icon.svg` | Lets riders add the trail map to their phone's home screen |
+| `site.webmanifest`, `assets/icon*.png`, `assets/apple-touch-icon.png` | Lets riders add the trail map to their phone's home screen, with a proper icon on iPhone and Android |
+| `ride/` | The GPS trail app (a copy of the app's own folder) |
 | `404.html` | "Off the trail" page for bad links |
 
 ## Updating trail status (30 seconds)
 Open `assets/site-config.js` and change `overall: "closed"` to `"open"` or `"limited"`. Update `note` and `updated`, and set each area's `status`. Then re-upload.
 
+That one change updates the home page, the website trail map **and the GPS app**. The app reads the same file, so there is nothing else to update. Each area's `zone` is the name the app uses for that area; leave those as they are.
+
 Monthly meetings (3rd Wednesday) show up on the calendar automatically, each with an "Add to calendar" button. Add one-off events, such as trail work days, to `events`.
 
 ## GPS app integration
 - `map.html` already works as a GPS trail map in any phone browser. It reads the same `data/trails.geojson` the GPS app produces.
-- The app lives in the `ride/` folder and `gpsApp.ready` is `true`, so the "GPS App" section shows **Launch the GPS app**. To update the app, replace the contents of `ride/` with the new build (and bump `VERSION` in `ride/sw.js` so phones pick it up).
-- To refresh the trails, copy the app's latest trail GeoJSON over `data/trails.geojson`.
-- The club's printed map (2022) crosses out some trails. The website map draws those as grey dashes. The app currently flags only the short red segments, not the two northern areas, so the two maps differ there until the app is updated.
+- The app lives in the `ride/` folder and `gpsApp.ready` is `true`, so the "GPS App" section shows **Launch the GPS app**.
+- The copy in `ride/` differs from the app's own source in four small ways. Each is marked `website integration` in the code. If you replace `ride/` with a new build, make the same changes again (or make them in the app's source once):
+  1. `ride/app.js`, `loadStatus`: trail status comes from the website's `assets/site-config.js`. If that file is missing, the app uses its own `data/status.json`.
+  2. `ride/app.js`: the two links to the club website point to `../` instead of the old Wix address.
+  3. `ride/sw.js`: the website's config file is fetched fresh each time, with a saved copy for no-signal use. Bump `VERSION` whenever app files change so phones pick up the update.
+  4. `ride/data/trails.geojson`: the trails crossed out on the club's 2022 map carry `note: "closed2022"`, so both maps say so.
+- `data/trails.geojson` and `ride/data/trails.geojson` are the same file. Keep them identical.
 
 ## Where it is hosted
 The site and the GPS app (in `ride/`) are published free with GitHub Pages from this repository:
@@ -36,6 +43,7 @@ Any change pushed to the `main` branch is live about a minute later.
 2. Where the domain is registered (currently managed through Wix), point `www` at `johnfudala-a11y.github.io` with a CNAME record. GitHub's Pages help lists the records for the bare domain.
 3. Tick "Enforce HTTPS" once GitHub finishes the certificate.
 4. In `index.html`, change the two `og:` addresses near the top to the club's domain so text-message previews show the right link.
+5. In `index.html` and `map.html`, delete the `<meta name="robots" content="noindex">` line. It keeps the preview address out of Google and must go once this is the real site.
 
 Do this only after the shop question below is settled.
 

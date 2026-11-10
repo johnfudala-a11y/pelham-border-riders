@@ -21,20 +21,20 @@ window.PBR = {
      map:   printable trail map (optional)
      kiosk: the Town of Pelham's kiosk map for the area (optional)     */
   areas: [
-    { name: "Town Trails, Ponds, Pipeline & Powerlines", size: "60+ miles", status: "closed", note: "The main town-wide network", map: "map.html", mapLabel: "Open live map" },
-    { name: "Peabody Town Forest", size: "100+ acres", status: "closed",
+    { zone: "town", name: "Town Trails, Ponds, Pipeline & Powerlines", size: "60+ miles", status: "closed", note: "The main town-wide network", map: "map.html", mapLabel: "Open live map" },
+    { zone: "peabody", name: "Peabody Town Forest", size: "100+ acres", status: "closed",
       map: "assets/maps/peabody-town-forest.pdf",
       kiosk: "https://www.pelhamweb.com/sites/g/files/vyhlif4856/f/uploads/kioskpeabody_003.pdf" },
-    { name: "Kirby Ivers Town Forest", size: "86 acres", status: "closed",
+    { zone: "kirby", name: "Kirby Ivers Town Forest", size: "86 acres", status: "closed",
       map: "assets/maps/kirby-ivers-town-forest.pdf" },
-    { name: "Gumpas Pond Conservation Area", size: "150 acres", status: "closed",
+    { zone: "gumpas", name: "Gumpas Pond Conservation Area", size: "150 acres", status: "closed",
       map: "assets/maps/gumpas-pond-conservation-area.pdf" },
-    { name: "Merriam / Cutter Conservation Area", size: "147 acres", status: "closed",
+    { zone: "cutter", name: "Merriam / Cutter Conservation Area", size: "147 acres", status: "closed",
       map: "assets/maps/merriam-cutter-conservation-area.pdf",
       kiosk: "https://www.pelhamweb.com/sites/g/files/vyhlif4856/f/uploads/kioskcuttermerriam.pdf" },
-    { name: "Muldoon Park", size: "58 acres", status: "closed",
+    { zone: "muldoon", name: "Muldoon Park", size: "58 acres", status: "closed",
       map: "assets/maps/muldoon-park.pdf" },
-    { name: "Little Island Pond Conservation Area", size: "21.5 acres", status: "closed",
+    { zone: "littleisland", name: "Little Island Pond Conservation Area", size: "21.5 acres", status: "closed",
       map: "assets/maps/little-island-pond-conservation-area.pdf" }
   ],
 
